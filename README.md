@@ -1,2 +1,2 @@
 # MicrosoftCloudScripts
-Scipt and snippets for Microsoft Cloud Products
+Scipts and snippets for Microsoft Cloud Products
