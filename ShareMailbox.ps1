@@ -14,6 +14,6 @@
 #>
 
 #First Connect to exchange Online
-Connect-ExchangeOnline -NoWelcome
+Connect-ExchangeOnline -ShowBanner:$false
 
 $mailBox = Get-Mailbox -Filter {(RecipientTypeDetails -eq 'SharedMailbox')}
