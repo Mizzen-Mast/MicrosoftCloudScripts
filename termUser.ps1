@@ -39,6 +39,11 @@ function Split-Upn($userPrincipalName) {
     Return $username, $domain
 }
 
+#set up variables needed
+$username,$domain = Split-Upon $upn
+$deviceNameBegin = $username
+$deviceDisabled = $false
+
 #first disconect from Microsoft Graph if a session exists
 if (get-mgcontext) { 
     Disconnect-MgGraph
@@ -49,18 +54,35 @@ if (get-mgcontext) {
 
 
 
-
-
+#disable User account, Set department and title to blank
 Clear-Variable user -ErrorAction SilentlyContinue
 $user = Get-MgUser -Filter "startsWith(UserPrincipalName, '$upn')"
 
-If (!$user) { 
+If ($user) {
+    Update-MgUser -UserId $user.Id -AccountEnabled:$false -Department '' -Title ''
+} Else { 
     Write-Host "No User found, closing"
     Pause
     Exit
 }
 
+Clear-Variable user -ErrorAction SilentlyContinue
+$device = Get-MgDevice -Filter "startsWith(DisplayName, '$deviceNameBegin)"
+If ($device) { 
+    Update-MgDevice -DeviceId $device.Id -AccountEnabled:$false
+} Else { 
+    Write-Host "No device found, it probably wasn't renamed appropriately"
+    $deviceDisabled = $true
+    Pause
+}
 
 
-Update-MgUser -UserId $user.Id -AccountEnabled:$false -Department '' -Title ''
+
+
+
+if (!$deviceDisabled) { 
+    Write-Host "Please go find the device and disable it."
+    Pause
+}
+
 
