@@ -97,7 +97,7 @@ foreach ($mailbox in $mailboxesShared) {
 
         #add first group 
         If ([string]::IsNullorEmpty($dataExport.GroupId) ) { 
-        $dataExport += New-Object -TypeName PsObject -Property @{"Group"=$Group.DisplayName; "GroupId"=$group.Id; "Member1"=$mailbox.UserPrincipalName; "NumOfMem"=1 }
+        $dataExport += New-Object -TypeName PsObject -Property @{"Group"=$Group.DisplayName; "GroupId"=$group.Id; "User1"=$mailbox.UserPrincipalName; "NumOfMem"=1 }
         }
         foreach ($group in $groups ) { 
 
@@ -123,7 +123,7 @@ foreach ($mailbox in $mailboxesShared) {
                 if ($index -eq '-1'){ 
                         Write-Host "In index negative one, adding new group"
                         Write-Host $Group.DisplayName
-                        $DataExport += New-Object -TypeName PsObject -Property @{"Group"=$Group.DisplayName; "GroupId"=$group.Id; "Member1"=$mailbox.UserPrincipalName; "NumOfMem"=1 }
+                        $DataExport += New-Object -TypeName PsObject -Property @{"Group"=$Group.DisplayName; "GroupId"=$group.Id; "User1"=$mailbox.UserPrincipalName; "NumOfMem"=1 }
                         #Read-Host -Prompt "Press Any Key to continue"
 
                 }
@@ -131,7 +131,7 @@ foreach ($mailbox in $mailboxesShared) {
                         #Write-Host "Index found, Appending"
                         #Write-Host "Length Before" + $dataExport[$index].NumOfMem
                         $memberNum = ($dataExport[$index].NumOfMem + 1)
-                        $dataExport[$index] | Add-Member -NotePropertyName "Member$memberNum" -NotePropertyValue $mailbox.UserPrincipalName
+                        $dataExport[$index] | Add-Member -NotePropertyName "user$memberNum" -NotePropertyValue $mailbox.UserPrincipalName
                         $dataExport[$index].NumOfMem += 1
                         #Write-Host "Length After" + $dataExport[$index].NumOfMem
                         #Read-Host -Prompt "Press Any Key to continue"
@@ -142,3 +142,5 @@ foreach ($mailbox in $mailboxesShared) {
 
         #>
 }
+
+$dataExport | Export-Csv -Path "C:\Users\KyleClayson\Downloads\export.csv"
